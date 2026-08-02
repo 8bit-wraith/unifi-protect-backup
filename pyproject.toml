@@ -48,7 +48,7 @@ ruff = "^0.5.7"
 optional = true
 
 [tool.poetry.group.test.dependencies]
-pytest  = "^6.2.4"
+pytest  = ">=6.2.4,<10.0.0"
 pytest-cov  = "^2.12.0"
 tox  = "^3.20.1"
 tox-asdf = "^0.1.0"
