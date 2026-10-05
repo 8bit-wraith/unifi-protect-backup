@@ -16,7 +16,7 @@ async def delete_file(file_path, rclone_purge_args):
     """Deletes `file_path` via rclone."""
     returncode, stdout, stderr = await run_command(f'rclone delete -vv "{file_path}" {rclone_purge_args}')
     if returncode != 0:
-        logger.error(f" Failed to delete file: '{file_path}'")
+        raise RuntimeError(f"Failed to delete file: '{file_path}' (rclone exit {returncode})")
 
 
 async def tidy_empty_dirs(base_dir_path):
@@ -69,8 +69,8 @@ class Purge:
                         # For every backup for this event
                         async with self._db.execute(f"SELECT * FROM backups WHERE id = '{event_id}'") as backup_cursor:
                             async for _, remote, file_path in backup_cursor:
-                                logger.debug(f" Deleted: {remote}:{file_path}")
                                 await delete_file(f"{remote}:{file_path}", self.rclone_purge_args)
+                                logger.debug(f" Deleted: {remote}:{file_path}")
                                 deleted_a_file = True
 
                         # delete event from database
